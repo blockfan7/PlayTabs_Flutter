@@ -7,7 +7,7 @@ typedef void MultiUseCallback(dynamic msg);
 
 class NativeTransmitter {
   // define channel
-  static String payTabsChannelName = "com.rajan.paytabs/payTabs";
+  static String payTabsChannelName = "com.rajan.paytabs.paytabs";
   MethodChannel payTabsChannel = MethodChannel(payTabsChannelName);
 
   // define the identifier to
@@ -17,7 +17,7 @@ class NativeTransmitter {
   // callback from native code
   Future<void> _methodCallHandler(MethodCall call) async {
     switch (call.method) {
-      case 'demoFunction_callback': // callback from native code that was sent by demoFunction
+      case 'demofunction_callback': // callback from native code that was sent by demoFunction
         payTabIdList[call.arguments["id"]](call.arguments["sentResult"]);
         // remove the identifier
         payTabIdList.remove(call.arguments["id"]);
@@ -35,6 +35,6 @@ class NativeTransmitter {
     int currentListenerId = _nextCallbackId++;
     paymentInfo.id = currentListenerId;
     payTabIdList[currentListenerId] = callback;
-    await payTabsChannel.invokeMethod("demoFunction", jsonEncode(paymentInfo));
+    await payTabsChannel.invokeMethod("demofunction", jsonEncode(paymentInfo));
   }
 }

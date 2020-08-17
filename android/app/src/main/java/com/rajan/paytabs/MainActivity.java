@@ -1,10 +1,12 @@
 package com.rajan.paytabs;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,16 +30,39 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class MainActivity extends FlutterActivity {
     static Context context;
-    private static final String payTabsChannelName = "com.rajan.paytabs/payTabs";
+    private static final String payTabsChannelName = "com.rajan.paytabs.paytabs";
     private MethodChannel payTabsChannel;
     private String TAG = "PayTabsTAG";
 
+//    private static final String merchant_email = "digital@marshal.ae";
+//    private static final String secretKey = "WVEmL6gff30oiHyDgiau6tKje9FXhWieRXAC4QSjUTIdAgQRz1mGu6ZJgFHyB0NsXn51eXk9Q3mrkdjUeFAJMzt3ebBQboi8Moa0";
     private static final String merchant_email = "shildra7.dev@gmail.com";
     private static final String secretKey = "v2ZWdkbjFFLXosKHh2r7ZGHM1WzDsiUXkTTyd5RTLDR96BQnEiuDZbq180EAiyyDssbGy3zjHqtN2jaGCFkBRLCZLhA3P8HiBSY9";
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.e(TAG, "ON Create");
+        Context context = getApplicationContext();
+        CharSequence text = "ON Create";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+        testBridge();
+    }
+
+    @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
+
+        Log.e(TAG, "On Configure Flutter Engine.");
+        Context context = getApplicationContext();
+        CharSequence text = "On Configure Flutter Engine.";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
         context = getApplicationContext();
 
         // create PayTabs channel
@@ -48,14 +73,42 @@ public class MainActivity extends FlutterActivity {
             @Override
             public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
                 try {
-                    Method method = MainActivity.class.getDeclaredMethod(
-                            call.method,
-                            Object.class,
-                            MethodChannel.Result.class
-                    );
+                    Log.e(TAG, "On Method Called." + call.method);
+                    Context context = getApplicationContext();
+                    CharSequence text = "On Method Called." + call.method;
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
 
-                    method.setAccessible(true);
-                    method.invoke(MainActivity.this, call.arguments, result);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            // yourMethod();
+                        }
+                    }, 5000);
+
+                    if (call.method.equals("demofunction")) {
+                        demofunction(call.arguments, result);
+
+                    } else {
+                        result.notImplemented();
+                    }
+
+//
+//                    Method method = MainActivity.class.getDeclaredMethod(
+//                            call.method,
+//                            Object.class,
+//                            MethodChannel.Result.class
+//                    );
+//
+//                    Log.e(TAG, "Method check....");
+//                    text = "Method check....";
+//                    toast = Toast.makeText(context, text, duration);
+//                    toast.show();
+//
+//                    method.setAccessible(true);
+//                    method.invoke(MainActivity.this, call.arguments, result);
+
                 } catch (Throwable err) {
                     Log.e(TAG, "Exception during channel invoke", err);
                     result.error("Exception during channel invoke", err.getMessage(), null);
@@ -64,20 +117,21 @@ public class MainActivity extends FlutterActivity {
         });
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-//        testBridge();
-    }
-
     // Callback List
     private Map<Integer, Runnable> payTabIdList = new HashMap<>();
     private int current;
 
     // demo function
-    private void demoFunction(Object args, MethodChannel.Result result) {
+    private void demofunction(Object args, MethodChannel.Result result) {
         try {
+            Log.e(TAG, "demo function called.");
+            Context context = getApplicationContext();
+            CharSequence text = "demo function called.";
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+
             JSONObject argObj = new JSONObject(args.toString());
             int currentListenerId = argObj.getInt("id");
             current = currentListenerId;
@@ -117,44 +171,49 @@ public class MainActivity extends FlutterActivity {
                 @Override
                 public void run() {
                     if (payTabIdList.containsKey(currentListenerId)) {
+                        Intent intent = new Intent(getApplicationContext(), PayTabActivity.class);
 
                         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-                        hashMap.put(PaymentParams.MERCHANT_EMAIL, merchant_email);
-                        hashMap.put(PaymentParams.SECRET_KEY, secretKey);
-                        hashMap.put(PaymentParams.LANGUAGE, language);
-                        hashMap.put(PaymentParams.TRANSACTION_TITLE, transactionTitle);
-                        hashMap.put(PaymentParams.AMOUNT, transactionAmount);
+                        intent.putExtra("key", "value");
+                        intent.putExtra(PaymentParams.MERCHANT_EMAIL, merchant_email);
+                        intent.putExtra(PaymentParams.SECRET_KEY, secretKey);
+                        intent.putExtra(PaymentParams.TRANSACTION_TITLE, transactionTitle);
+                        intent.putExtra(PaymentParams.AMOUNT, (double)5.0);
 
-                        hashMap.put(PaymentParams.CURRENCY_CODE, currencyCode);
-                        hashMap.put(PaymentParams.CUSTOMER_PHONE_NUMBER, customerPhoneNumber);
-                        hashMap.put(PaymentParams.CUSTOMER_EMAIL, customerEmail);
-                        hashMap.put(PaymentParams.ORDER_ID, orderId);
-                        hashMap.put(PaymentParams.PRODUCT_NAME, productName);
+                        intent.putExtra(PaymentParams.CURRENCY_CODE, currencyCode);
+                        intent.putExtra(PaymentParams.CUSTOMER_PHONE_NUMBER, customerPhoneNumber);
+                        intent.putExtra(PaymentParams.CUSTOMER_EMAIL, customerEmail);
+                        intent.putExtra(PaymentParams.ORDER_ID, orderId);
+                        intent.putExtra(PaymentParams.PRODUCT_NAME, productName);
 
                         // Billing Address
-                        hashMap.put(PaymentParams.ADDRESS_BILLING, addressBilling);
-                        hashMap.put(PaymentParams.CITY_BILLING, cityBilling);
-                        hashMap.put(PaymentParams.STATE_BILLING, stateBilling);
-                        hashMap.put(PaymentParams.COUNTRY_BILLING, countryBilling);
-                        hashMap.put(PaymentParams.POSTAL_CODE_BILLING, postalCodeBilling);
+                        intent.putExtra(PaymentParams.ADDRESS_BILLING, addressBilling);
+                        intent.putExtra(PaymentParams.CITY_BILLING, cityBilling);
+                        intent.putExtra(PaymentParams.STATE_BILLING, stateBilling);
+                        intent.putExtra(PaymentParams.COUNTRY_BILLING, countryBilling);
+                        intent.putExtra(PaymentParams.POSTAL_CODE_BILLING, postalCodeBilling);
 
                         // Shipping Address
-                        hashMap.put(PaymentParams.ADDRESS_SHIPPING, addressShipping);
-                        hashMap.put(PaymentParams.CITY_SHIPPING, cityShipping);
-                        hashMap.put(PaymentParams.STATE_SHIPPING, stateShipping);
-                        hashMap.put(PaymentParams.COUNTRY_SHIPPING, countryShipping);
-                        hashMap.put(PaymentParams.POSTAL_CODE_SHIPPING, postalCodeShipping);
+                        intent.putExtra(PaymentParams.ADDRESS_SHIPPING, addressShipping);
+                        intent.putExtra(PaymentParams.CITY_SHIPPING, cityShipping);
+                        intent.putExtra(PaymentParams.STATE_SHIPPING, stateShipping);
+                        intent.putExtra(PaymentParams.COUNTRY_SHIPPING, countryShipping);
+                        intent.putExtra(PaymentParams.POSTAL_CODE_SHIPPING, postalCodeShipping);
 
                         // Payment Page Style
-                        hashMap.put(PaymentParams.PAY_BUTTON_COLOR, payButtonColor);
+//                        intent.putExtra(PaymentParams.PAY_BUTTON_COLOR, payButtonColor);
 
                         // Tokenization
-                        hashMap.put(PaymentParams.IS_TOKENIZATION, isTokenization);
-                        hashMap.put("currentListenerId", currentListenerId);
+                        intent.putExtra(PaymentParams.IS_TOKENIZATION, true);
 
-                        Intent intent = new Intent(getApplicationContext(), BridgeActivity.class);
-                        intent.putExtra("params", hashMap);
-                        startActivityForResult(intent, PaymentParams.PAYMENT_REQUEST_CODE);
+                        Log.e(TAG, "Run Intent");
+                        Context context = getApplicationContext();
+                        CharSequence text = "Run Intent";
+                        int duration = Toast.LENGTH_LONG;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+
+                        startActivityForResult(intent, PaymentParams.PAYMENT_REQUEST_CODE + currentListenerId);
                     }
                 }
             });
@@ -166,58 +225,67 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
-    private void testBridge() {
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("key", "value");
-        hashMap.put(PaymentParams.MERCHANT_EMAIL, merchant_email);
-        hashMap.put(PaymentParams.SECRET_KEY, secretKey);
-        hashMap.put(PaymentParams.TRANSACTION_TITLE, "transactionTitle");
-        hashMap.put(PaymentParams.AMOUNT, (double)5.0);
+     private void testBridge() {
+         Intent intent = new Intent(getApplicationContext(), PayTabActivity.class);
+         intent.putExtra("key", "value");
+         intent.putExtra(PaymentParams.MERCHANT_EMAIL, merchant_email);
+         intent.putExtra(PaymentParams.SECRET_KEY, secretKey);
+         intent.putExtra(PaymentParams.TRANSACTION_TITLE, "transactionTitle");
+         intent.putExtra(PaymentParams.AMOUNT, (double)5.0);
 
-        hashMap.put(PaymentParams.CURRENCY_CODE, "BHD");
-        hashMap.put(PaymentParams.CUSTOMER_PHONE_NUMBER, "customerPhoneNumber");
-        hashMap.put(PaymentParams.CUSTOMER_EMAIL, "customerEmail");
-        hashMap.put(PaymentParams.ORDER_ID, "orderId");
-        hashMap.put(PaymentParams.PRODUCT_NAME, "productName");
+         intent.putExtra(PaymentParams.CURRENCY_CODE, "BHD");
+         intent.putExtra(PaymentParams.CUSTOMER_PHONE_NUMBER, "customerPhoneNumber");
+         intent.putExtra(PaymentParams.CUSTOMER_EMAIL, "customerEmail");
+         intent.putExtra(PaymentParams.ORDER_ID, "orderId");
+         intent.putExtra(PaymentParams.PRODUCT_NAME, "productName");
 
-        // Billing Address
-        hashMap.put(PaymentParams.ADDRESS_BILLING, "addressBilling");
-        hashMap.put(PaymentParams.CITY_BILLING, "cityBilling");
-        hashMap.put(PaymentParams.STATE_BILLING, "stateBilling");
-        hashMap.put(PaymentParams.COUNTRY_BILLING, "countryBilling");
-        hashMap.put(PaymentParams.POSTAL_CODE_BILLING, "postalCodeBilling");
+         // Billing Address
+         intent.putExtra(PaymentParams.ADDRESS_BILLING, "addressBilling");
+         intent.putExtra(PaymentParams.CITY_BILLING, "cityBilling");
+         intent.putExtra(PaymentParams.STATE_BILLING, "stateBilling");
+         intent.putExtra(PaymentParams.COUNTRY_BILLING, "countryBilling");
+         intent.putExtra(PaymentParams.POSTAL_CODE_BILLING, "postalCodeBilling");
 
-        // Shipping Address
-        hashMap.put(PaymentParams.ADDRESS_SHIPPING, "addressShipping");
-        hashMap.put(PaymentParams.CITY_SHIPPING, "cityShipping");
-        hashMap.put(PaymentParams.STATE_SHIPPING, "stateShipping");
-        hashMap.put(PaymentParams.COUNTRY_SHIPPING, "countryShipping");
-        hashMap.put(PaymentParams.POSTAL_CODE_SHIPPING, "postalCodeShipping");
+         // Shipping Address
+         intent.putExtra(PaymentParams.ADDRESS_SHIPPING, "addressShipping");
+         intent.putExtra(PaymentParams.CITY_SHIPPING, "cityShipping");
+         intent.putExtra(PaymentParams.STATE_SHIPPING, "stateShipping");
+         intent.putExtra(PaymentParams.COUNTRY_SHIPPING, "countryShipping");
+         intent.putExtra(PaymentParams.POSTAL_CODE_SHIPPING, "postalCodeShipping");
 
-        // Payment Page Style
-        hashMap.put(PaymentParams.PAY_BUTTON_COLOR, "payButtonColor");
+         // Payment Page Style
+         intent.putExtra(PaymentParams.PAY_BUTTON_COLOR, "payButtonColor");
 
-        // Tokenization
-        hashMap.put(PaymentParams.IS_TOKENIZATION, true);
-        hashMap.put("currentListenerId", 5);
+         // Tokenization
+         intent.putExtra(PaymentParams.IS_TOKENIZATION, false);
 
-        Intent intent = new Intent(getApplicationContext(), BridgeActivity.class);
-        intent.putExtra("params", hashMap);
-        startActivityForResult(intent, PaymentParams.PAYMENT_REQUEST_CODE);
-    }
+         startActivityForResult(intent, PaymentParams.PAYMENT_REQUEST_CODE-1);
+     }
 
     // Action Result Callback
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "Intent Callback");
+        Context context = getApplicationContext();
+        CharSequence text = "Intent Callback";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
 
-        if (requestCode >= PaymentParams.PAYMENT_REQUEST_CODE) {
+        if (requestCode >= PaymentParams.PAYMENT_REQUEST_CODE && requestCode <= PaymentParams.PAYMENT_REQUEST_CODE+1000) {
+
+            int currentListenerId = requestCode - PaymentParams.PAYMENT_REQUEST_CODE;
             Map<String, Object> args = new HashMap();
-            args.put("id", data.getIntExtra("id", 0));
-            args.put("sentResult", data.getIntExtra("resultCode", 0));
-            payTabsChannel.invokeMethod("demoFunction_callback", args);
-            payTabIdList.remove(current);
+            args.put("id", currentListenerId);
+            if(data == null) {
+                args.put("sentResult", false);
+            }else{
+                args.put("sentResult", true);
+            }
+//            payTabsChannel.invokeMethod("demofunction_callback", args);
+//            payTabIdList.remove(current);
         }
     }
 }

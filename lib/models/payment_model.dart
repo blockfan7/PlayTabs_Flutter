@@ -3,9 +3,9 @@ class PaymentModel {
   String language = "en";
 
   String transactionTitle = "transactionTitle";
-  double transactionAmount = 5000.0;
+  double transactionAmount = 50.0;
 
-  String currencyCode = "INR";
+  String currencyCode = "USD";
   String customerPhoneNumber = "1548124";
   String customerEmail = "customerEmail@email.com";
   String orderId = "orderId";

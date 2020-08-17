@@ -49,12 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void onClickSend() async {
     print("kakao login clicked");
     PaymentModel paymentInfo = new PaymentModel();
-    paymentInfo.payButtonColor = '#${currentColor.value.toRadixString(16)}';
+    paymentInfo.payButtonColor = '#2474bc';
     paymentInfo.transactionAmount = double.parse(amountController.text);
     paymentInfo.currencyCode = currencyController.text.trim();
     nativeTransmitter.demoFunction(paymentInfo, (result) {
       setState(() {
-        if (result == 0) {
+        if (result == false) {
           errorText = "Error";
         } else {
           errorText = "Success";
@@ -98,41 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   hintText: "Amount",
                 ),
               ),
-            ),
-            RaisedButton(
-              elevation: 3.0,
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      titlePadding: const EdgeInsets.all(0.0),
-                      contentPadding: const EdgeInsets.all(0.0),
-                      content: SingleChildScrollView(
-                        child: ColorPicker(
-                          pickerColor: currentColor,
-                          onColorChanged: changeColor,
-                          colorPickerWidth: 300.0,
-                          pickerAreaHeightPercent: 0.7,
-                          enableAlpha: true,
-                          displayThumbColor: true,
-                          showLabel: true,
-                          paletteType: PaletteType.hsv,
-                          pickerAreaBorderRadius: const BorderRadius.only(
-                            topLeft: const Radius.circular(2.0),
-                            topRight: const Radius.circular(2.0),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-              child: const Text('Change Color'),
-              color: currentColor,
-              textColor: useWhiteForeground(currentColor)
-                  ? const Color(0xffffffff)
-                  : const Color(0xff000000),
             ),
             RaisedButton(
               elevation: 3.0,
