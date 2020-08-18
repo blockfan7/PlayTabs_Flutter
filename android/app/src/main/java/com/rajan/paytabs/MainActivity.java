@@ -48,8 +48,8 @@ public class MainActivity extends FlutterActivity {
         int duration = Toast.LENGTH_LONG;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
-
-        testBridge();
+//
+//        testBridge();
     }
 
     @Override
@@ -284,8 +284,8 @@ public class MainActivity extends FlutterActivity {
             }else{
                 args.put("sentResult", true);
             }
-//            payTabsChannel.invokeMethod("demofunction_callback", args);
-//            payTabIdList.remove(current);
+           payTabsChannel.invokeMethod("demofunction_callback", args);
+           payTabIdList.remove(current);
         }
     }
 }
