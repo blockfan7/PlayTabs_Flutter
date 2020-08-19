@@ -34,8 +34,8 @@ struct PaymentModel: Decodable{
 class MainViewController: FlutterViewController {
     var payTabChannelName = "com.rajan.paytabs.paytabs"
     var initialSetupViewController: PTFWInitialSetupViewController!
-    var channelListenerId:Int
-    var paytabChannel:FlutterMethodChannel
+    var channelListenerId : Int = 0
+    var paytabChannel:FlutterMethodChannel!
     override func viewDidLoad() {
         super.viewDidLoad()
 //        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
@@ -67,7 +67,7 @@ class MainViewController: FlutterViewController {
             self.initialSetupViewController = PTFWInitialSetupViewController.init(
                 bundle: bundle,
                 andWithViewFrame: self.view.frame,
-                andWithAmount: (json?["transactionAmount"] as? Double) ?? 0.0,
+                andWithAmount: (json?["transactionAmount"] as? Float) ?? 0.0,
                 andWithCustomerTitle: (json?["transactionTitle"] as? String) ?? "" ,
                 andWithCurrencyCode: (json?["currencyCode"] as? String) ?? "",
                 andWithTaxAmount: 0.0,
@@ -107,10 +107,10 @@ class MainViewController: FlutterViewController {
 
             self.initialSetupViewController.didReceiveFinishTransactionCallback = {(responseCode, result, transactionID, tokenizedCustomerEmail, tokenizedCustomerPassword, token, transactionState) in
                   var args = [String: Any]()
-                  args["id"] = channelListenerId
+                args["id"] = self.channelListenerId
                   args["sentResult"] = result
                   // todo - add other arg members
-                  methodChannel.invokeMethod("demofunction_callback", arguments: args)
+                self.paytabChannel.invokeMethod("demofunction_callback", arguments: args)
                             
     //            flutterResult(String(result))
             }

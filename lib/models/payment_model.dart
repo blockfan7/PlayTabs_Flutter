@@ -1,6 +1,6 @@
 class PaymentModel {
   int id = 0;
-  String language = "en";
+  String language = "EN";
 
   String transactionTitle = "transactionTitle";
   double transactionAmount = 50.0;
