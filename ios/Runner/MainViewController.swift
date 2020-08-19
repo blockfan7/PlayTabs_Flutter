@@ -55,9 +55,11 @@ class MainViewController: FlutterViewController {
         guard let tmp = (arguments).data(using: .utf8) else { return }
         do {
             let json = try JSONSerialization.jsonObject(with: tmp, options: .mutableContainers) as? [String:AnyObject]
+            print("All", json)
                 print("JSOn: ", (json?["id"] as? Int) ?? 0)
-                print("JSOn: ", json?["customerEmail"] as! String)
+                print("JSOn: ", (json?["customerEmail"] as? String) ?? "")
                 print("JSOn: ", (json?["transactionAmount"] as? Double) ?? 0)
+            print("JSOn: ", (json?["language"] as? String) ?? "")
 
 
             channelListenerId = (json?["id"] as? Int) ?? 0;
@@ -71,7 +73,9 @@ class MainViewController: FlutterViewController {
                 andWithCustomerTitle: (json?["transactionTitle"] as? String) ?? "" ,
                 andWithCurrencyCode: (json?["currencyCode"] as? String) ?? "",
                 andWithTaxAmount: 0.0,
-                andWithSDKLanguage: (json?["language"] as? String) ?? "",
+//                andWithSDKLanguage: (json?["language"] as? String) ?? "",
+                andWithSDKLanguage: "en",
+
 
                 andWithShippingAddress: (json?["addressShipping"] as? String) ?? "",
                 andWithShippingCity: (json?["cityShipping"] as? String) ?? "",

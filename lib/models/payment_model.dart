@@ -1,30 +1,30 @@
 class PaymentModel {
   int id = 0;
-  String language = "EN";
+  String language = "en";
 
   String transactionTitle = "transactionTitle";
   double transactionAmount = 50.0;
 
   String currencyCode = "USD";
-  String customerPhoneNumber = "1548124";
+  String customerPhoneNumber = "0097333109781";
   String customerEmail = "customerEmail@email.com";
-  String orderId = "orderId";
+  String orderId = "12345";
   String productName = "productName";
 
   // Billing Address
-  String addressBilling = "addressBilling";
-  String cityBilling = "cityBilling";
-  String stateBilling = "stateBilling";
-  String countryBilling = "countryBilling";
-  String postalCodeBilling = "00973";
+  String addressBilling = "Manama";
+  String cityBilling = "Manama";
+  String stateBilling = "Manama";
+  String countryBilling = "BHR";
+  String postalCodeBilling = "12345";
   //Put Country Phone code if Postal code not available '00973'
 
   // Shipping Address
-  String addressShipping = "addressShipping";
-  String cityShipping = "cityShipping";
-  String stateShipping = "stateShipping";
-  String countryShipping = "countryShipping";
-  String postalCodeShipping = "postalCodeShipping";
+  String addressShipping = "Manama";
+  String cityShipping = "Manama";
+  String stateShipping = "Manama";
+  String countryShipping = "BHR";
+  String postalCodeShipping = "00973";
   // Payment Page Style
   String payButtonColor = "#FF0000";
 
